@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Shop | Pande Komang Tio Gemisatya</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+</head>
+
+<body class="bg-slate-950 text-white">
+    <header class="z-10 sticky top-0 bg-slate-950 py-5">
+        <nav class="w-9/12 flex flex-row mx-auto">
+            <div class="uppercase basis-1/4"> <!-- Logo -->
+                <a href="#home" class="tracking-wide">
+                    <span class="font-extralight text-white">Komang</span>
+                    <span class="font-extrabold text-blue-700">Tio</span>
+                </a>
+            </div>
+            <div class="basis-1/2 flex items-center justify-evenly text-gray-500"> <!-- Link -->
+                <a href="index.html"><span>Portfolio</span></a>
+                <a href="albumshop.html"><span>Album Shop</span></a>
+            </div>
+            <div class="basis-1/4 flex justify-end"> <!-- Media Sosial -->
+                <a href="https://www.instagram.com/komang_tio2633/">
+                    <span class="hidden dark:inline end-0 w-10"><img class="w-6 h-6" src="img/Instagram.svg" alt=""></span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="relative -top-32">
+        <div class="flex mx-auto w-5/6 flex-row items-start py-40 text-white">
+            <div id="app" class="container mx-auto h-full">
+                <div class="flex px-6 my-12 h-full">
+                    <div class="px-10">
+                        <h2 class="text-3xl font-bold mb-4">Album Shop</h2>
+                        <div class="grid grid-cols-4 gap-4 items-center">
+                            <div v-for="(product, index) in products" :key="index" class="border p-4 rounded-md">
+                                <div class="relative w-24 h-24 items-center overflow-hidden">
+                                    <img :src="product.image" alt="Gambar" class="absolute top-0 left-0 w-full h-full object-cover">
+                                </div>
+                                <div class="font-extrabold py-1">{{ product.name }}</div>
+                                <div class="text-gray-300 font-semibold py-1">Rp {{ formatNumber(product.price) }}</div>
+                                <button @click="addToCart(product)" class="mt-2 bg-slate-800 text-white py-1 px-4 rounded-lg">Tambah</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-10 bg-slate-800 rounded-lg py-10">
+                        <h1 class="text-3xl font-bold mb-4">Keranjang</h1>
+                        <div v-if="cart.length === 0">
+                        </div>
+                        <div v-else>
+                            <ul>
+                                <li v-for="(item, index) in cart" :key="index" 
+                                class="border p-4 rounded-md mb-2 flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <img :src="item.image" alt="Product Image"
+                                            class="mr-2 rounded-md w-16 h-16 object-cover">
+                                        <div class="px-5">
+                                            <div class="font-semibold">{{ item.name }}</div>
+                                            <div class="text-gray-300 font-semibold">Rp {{ formatNumber(item.price) }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <button @click="removeFromCart(index)"
+                                            class="mr-2 bg-red-500 text-white px-4 rounded-lg">-</button>
+                                        {{ item.quantity }}
+                                        <button @click="addToCart(item, true)"
+                                            class="ml-2 bg-sky-700 text-white px-4 rounded-lg">+</button>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="mt-4 font-bold">
+                                    <p>Total</p>
+                                    <p v-if="wallet !== ''">Bayar</p>
+                                    <p v-if="wallet !== '' && wallet >= getTotal()" class="text-white">Kembalian</p>
+                                    <p v-if="wallet !== '' && wallet < getTotal()" class="text-red-500">Dana tidak mencukupi</p>
+                                </div>
+                                <div class="mt-4 font-bold">
+                                    <p>: Rp {{ formatNumber(getTotal()) }}</p>
+                                    <p v-if="wallet !== ''">: Rp {{ formatNumber(wallet) }}</p>
+                                    <p v-if="wallet !== '' && wallet >= getTotal()" class="text-white">: Rp {{ formatNumber(wallet - getTotal()) }}</p>
+                                    <p v-if="wallet !== '' && wallet < getTotal()" class="text-red-500"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-center pt-10">
+                            <p class="flex justify-center py-2 px-10 bg-slate-950 text-white rounded-lg">Masukkan Dana</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 py-5">
+                            <div v-for="(item, index) in addWallet" :key="index" class="flex items-center justify-center">
+                                <button @click="addAmount(item.amount)" class="bg-slate-950 text-white py-2 px-4 rounded-lg mb-2 w-full">Rp {{ formatNumber(item.amount) }}</button>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <button @click="resetWallet" class="bg-slate-950 text-white py-2 px-4 rounded-lg mb-2 w-full">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="bottom-0 bg-slate-950 text-center py-10 font-mono ">
+        2023 &copy; Pande Komang Tio Gemisatya. All rights reserved
+    </footer>
+    <script src="javascript/albumshop.js"></script>
+</body>
+
+</html>
